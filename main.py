@@ -4,6 +4,9 @@ from discord.ext import commands
 
 import config
 import asyncio
+from keep_alive import keep_alive
+
+keep_alive()
 
 cog_extension = [
     "jishaku",
