@@ -12,7 +12,7 @@ async def start_app():
     app.router.add_get("/", handle)
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, port=8080)
+    site = web.TCPSite(runner, port=8000)
     await site.start()
 
 
