@@ -67,7 +67,7 @@ class Match(commands.Cog):
         async for player in players:
             player_list.append(player.name)
 
-        await ctx.send(f"Registered players:\n {'\n'.join(player_list)}")
+        await ctx.send(f"Registered players:\n ```\n{'\n'.join(player_list)}\n```")
 
     @is_referee()
     @commands.command("create")
