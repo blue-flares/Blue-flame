@@ -55,6 +55,21 @@ class Match(commands.Cog):
         await ctx.send("Tournament started and players added.")
 
     @is_referee()
+    @commands.command("list")
+    async def list(self, ctx: commands.Context):
+        """List all the members for the match."""
+        settings = await self.bot.mongo.get_settings(ctx.guild.id)
+        if not settings:
+            return await ctx.send("Settings not found. Please set up the bot first.")
+
+        players = self.bot.mongo.Player.find({})
+        player_list = []
+        async for player in players:
+            player_list.append(player.name)
+
+        await ctx.send(f"Registered players:\n {'\n'.join(player_list)}")
+
+    @is_referee()
     @commands.command("create")
     async def create(self, ctx: commands.Context):
         """Create a match thread."""
