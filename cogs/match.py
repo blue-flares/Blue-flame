@@ -82,6 +82,8 @@ class Match(commands.Cog):
             return await ctx.send("Player not found.")
 
         await player.delete()
+        settings.joined -= 1
+        await settings.commit()
 
         await member.remove_roles(discord.Object(id=settings.participant_role_id))
 
