@@ -70,6 +70,24 @@ class Match(commands.Cog):
         await ctx.send(f"Registered players:\n ```\n{'\n'.join(player_list)}\n```")
 
     @is_referee()
+    @commands.command("remove")
+    async def remove(self, ctx: commands.Context, member: discord.Member):
+        """Remove a member from the match."""
+        settings = await self.bot.mongo.get_settings(ctx.guild.id)
+        if not settings:
+            return await ctx.send("Settings not found. Please set up the bot first.")
+
+        player = await self.bot.mongo.Player.find_one({"player_id": member.id})
+        if not player:
+            return await ctx.send("Player not found.")
+
+        await player.delete()
+
+        await member.remove_roles(discord.Object(id=settings.participant_role_id))
+
+        await ctx.send(f"Removed {member.mention} from the match.")
+
+    @is_referee()
     @commands.command("create")
     async def create(self, ctx: commands.Context):
         """Create a match thread."""
