@@ -209,7 +209,7 @@ class Referee(commands.Cog):
             )
             if not channel:
                 return print("No channel Found.")
-            message: discord.Message = channel.fetch_message(
+            message: discord.Message = await channel.fetch_message(
                 settings.registration_message_id
             )
 
@@ -218,7 +218,6 @@ class Referee(commands.Cog):
 
             await message.edit(
                 content="Registration have now been closed.",
-                embed=message.embeds,
                 view=None,
             )
 
