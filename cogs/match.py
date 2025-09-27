@@ -172,7 +172,8 @@ class Match(commands.Cog):
 
         if not match_data:
             return await ctx.send("This command can only be used in match threads.")
-
+        if match_data.archieved == True:
+            return await ctx.send("Already Logged.")
         players = []
         for p in match_data.players:
             p = await self.bot.mongo.Player.find_one({"_id": p.pk})
@@ -188,7 +189,7 @@ class Match(commands.Cog):
             await self.bot.mongo.get_chal_id(ctx.guild.id),
             match_data.challonge_match_id,
             winner_id=winner_player.challonge_id,
-            score=score,
+            scores_csv=score,
         )
 
         match_data.winner = winner_player
