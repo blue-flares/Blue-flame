@@ -67,7 +67,9 @@ class Match(commands.Cog):
         async for player in players:
             player_list.append(player.name)
 
-        await ctx.send(f"Registered players:{len(player_list)} Players\n ```\n{'\n'.join(player_list)}\n```")
+        await ctx.send(
+            f"Registered players:{len(player_list)} Players\n ```\n{'\n'.join(player_list)}\n```"
+        )
 
     @is_referee()
     @commands.command("remove")
@@ -99,7 +101,7 @@ class Match(commands.Cog):
             return await ctx.send("Settings not found. Please set up the bot first.")
 
         matches = (
-            await self.bot.Match.find(
+            await self.bot.mongo.Match.find(
                 {
                     "players": {"$size": 2},  # exactly 2 players
                     "archieved": False,  # not archived
