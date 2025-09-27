@@ -148,12 +148,17 @@ class Match(commands.Cog):
             )
             settings = await self.bot.mongo.get_settings(ctx.guild.id)
             await thread.send(f"<@&{settings.referee_role_id}>")
+        await ctx.send("All needed threads have been created.")
 
     async def log_result(self, guild: discord.Guild, user: discord.Member):
         setting = await self.bot.mongo.get_settings(guild.id)
         channel: discord.TextChannel = guild.get_channel(setting.result_id)
 
         await channel.send(f"{user.mention} has won their match!")
+
+    async def update_matchup(self):
+        """Updates the db with latest challenges."""
+        ...
 
     @is_referee()
     @commands.command("score")
@@ -177,11 +182,13 @@ class Match(commands.Cog):
             return await ctx.send("The mentioned user is not part of this match.")
 
         winner_player = next(p for p in players if p.player_id == winner.id)
+        score = "1-0" if players[0].player_id == winner.id else "0-1"
 
         self.bot.challenge.matches.update(
             await self.bot.mongo.get_chal_id(ctx.guild.id),
             match_data.challonge_match_id,
             winner_id=winner_player.challonge_id,
+            score=score,
         )
 
         match_data.winner = winner_player
