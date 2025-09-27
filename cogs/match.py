@@ -147,7 +147,7 @@ class Match(commands.Cog):
                 f"Please report the match result here once completed."
             )
             settings = await self.bot.mongo.get_settings(ctx.guild.id)
-            await thread.send(f"<@&{settings.referee_role_id}>")
+            await thread.send(f"<@&1418546913741115492>")
         await ctx.send("All needed threads have been created.")
 
     async def log_result(self, guild: discord.Guild, user: discord.Member):
