@@ -114,8 +114,9 @@ class Match(commands.Cog):
 
         for matche in matches:
             player1, player2 = matche.players
-            player1 = await player1.fetch()
-            player2 = await player2.fetch()
+            player1 = await self.bot.mongo.Player.find_one({"_id": player1.pk})
+            player2 = await self.bot.mongo.Player.find_one({"_id": player2.pk})
+            # player2 = await player2.fetch()
 
             try:
                 user1 = ctx.guild.get_member(player1.player_id)
@@ -145,6 +146,8 @@ class Match(commands.Cog):
                 f"Match thread created for {user1.mention} and {user2.mention}.\n"
                 f"Please report the match result here once completed."
             )
+            settings = await self.bot.mongo.get_settings(ctx.guild.id)
+            await thread.send(f"<@&{settings.referee_role_id}>")
 
     async def log_result(self, guild: discord.Guild, user: discord.Member):
         setting = await self.bot.mongo.get_settings(guild.id)
@@ -167,7 +170,7 @@ class Match(commands.Cog):
 
         players = []
         for p in match_data.players:
-            p = await p.fetch()
+            p = await self.bot.mongo.Player.find_one({"_id": p.pk})
             players.append(p)
 
         if winner.id not in [p.player_id for p in players]:
