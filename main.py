@@ -28,7 +28,7 @@ class BlueFlare(commands.Bot):
             case_insensitive=False,
             self_bot=False,
             allowed_mentions=discord.AllowedMentions(
-                roles=False, everyone=False, users=True
+                roles=True, everyone=False, users=True
             ),
         )
 
