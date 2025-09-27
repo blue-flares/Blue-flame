@@ -156,9 +156,35 @@ class Match(commands.Cog):
 
         await channel.send(f"{user.mention} has won their match!")
 
-    async def update_matchup(self):
+    @is_referee()
+    @commands.command("um")
+    async def update_matchup(self, ctx: commands.Context):
         """Updates the db with latest challenges."""
-        ...
+        tournament_id = await self.bot.mongo.get_chal_id(ctx.guild.id)
+
+        matches = self.bot.challenge.matches.index(tournament_id)
+
+        for match in matches:
+            # # Updating match
+            match_doc = await self.bot.mongo.Match.find_one(
+                {"challonge_match_id": match["id"]}
+            )
+
+            if len(match_doc.players) != 2:
+                player1 = await self.bot.mongo.Player.find_one(
+                    {"challonge_id": match["player1_id"]}
+                )
+                player2 = await self.bot.mongo.Player.find_one(
+                    {"challonge_id": match["player2_id"]}
+                )
+
+                match_doc.players = list(
+                    filter(lambda x: x is not None, [player1, player2])
+                )
+
+                await match_doc.commit()
+
+        await ctx.send("Matchups updated.")
 
     @is_referee()
     @commands.command("score")
